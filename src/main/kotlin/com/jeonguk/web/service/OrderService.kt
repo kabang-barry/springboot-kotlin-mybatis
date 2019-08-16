@@ -22,4 +22,5 @@ class OrderService {
         val order = Order(userId = orderDto.userId, status = orderDto.status)
         orderMapper.insertOrder(order)
     }
+
 }

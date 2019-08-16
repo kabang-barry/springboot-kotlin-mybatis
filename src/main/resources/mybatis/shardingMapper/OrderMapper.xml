@@ -6,7 +6,7 @@
     <select id="selectByUserId" parameterType="int" resultType="order">
         SELECT *
         FROM t_order
-        WHERE user_id = #{userId}
+        WHERE user_id = #{user_id}
     </select>
 
     <insert id="insertOrder" parameterType="order">
