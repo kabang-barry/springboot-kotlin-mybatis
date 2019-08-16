@@ -14,7 +14,7 @@
 <!--        <package name="com.jeonguk.web.domain" />-->
 <!--    </typeAliases>-->
 <!--    <mappers>-->
-<!--        <mapper resource="mybatis/shardingMapper/a.xml" />-->
+<!--        <mapper resource="mybatis/shardingMapper/OrderMapper.xml" />-->
 <!--    </mappers>-->
 
 </configuration>

@@ -24,7 +24,7 @@ class ShardingConfig {
         get() {
             val result = TableRuleConfiguration()
             result.logicTable = "t_order"
-            result.actualDataNodes = "ds_\${0..1}.t_order_\${[0, 1]}"
+            result.actualDataNodes = "ds\${0..1}.t_order_\${[0, 1]}"
             result.keyGeneratorColumnName = "order_id"
             return result
         }
@@ -33,26 +33,25 @@ class ShardingConfig {
         get() {
             val result = TableRuleConfiguration()
             result.logicTable = "t_order_item"
-            result.actualDataNodes = "ds_\${0..1}.t_order_item_\${[0, 1]}"
+            result.actualDataNodes = "ds\${0..1}.t_order_item_\${[0, 1]}"
             return result
         }
 
     @ConfigurationProperties(prefix = "spring.datasource.ds0.hikari")
-    @Bean(name = ["ds_0"])
+    @Bean(name = ["ds0"])
     fun dataSource0(): DataSource {
         return HikariDataSource()
     }
 
     @ConfigurationProperties(prefix = "spring.datasource.ds1.hikari")
-    @Bean(name = ["ds_1"])
+    @Bean(name = ["ds1"])
     fun dataSource1(): DataSource {
         return HikariDataSource()
     }
 
     @Primary
     @Bean(name = ["shardingDataSource"])
-    @Throws(SQLException::class)
-    fun getDataSource(@Qualifier("ds_0") ds_0: DataSource, @Qualifier("ds_1") ds_1: DataSource): DataSource {
+    fun getDataSource(@Qualifier("ds0") ds0: DataSource, @Qualifier("ds1") ds1: DataSource): DataSource {
         val shardingRuleConfig = ShardingRuleConfiguration()
         shardingRuleConfig.tableRuleConfigs.add(orderTableRuleConfiguration)
         shardingRuleConfig.tableRuleConfigs.add(orderItemTableRuleConfiguration)
@@ -60,8 +59,8 @@ class ShardingConfig {
         shardingRuleConfig.defaultDatabaseShardingStrategyConfig = StandardShardingStrategyConfiguration("user_id", DatabaseShardingAlgorithm())
         shardingRuleConfig.defaultTableShardingStrategyConfig = StandardShardingStrategyConfiguration("order_id", TablePreciseShardingAlgorithm(), TableRangeShardingAlgorithm())
         val dataSourceMap = HashMap<String, DataSource>()
-        dataSourceMap.put("ds_0", ds_0)
-        dataSourceMap.put("ds_1", ds_1)
+        dataSourceMap["ds0"] = ds0
+        dataSourceMap["ds1"] = ds1
         val properties = Properties()
         //        properties.setProperty("sql.show", Boolean.TRUE.toString());
         return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, HashMap<String, Any>(), properties)

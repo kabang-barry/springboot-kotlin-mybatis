@@ -9,15 +9,16 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.mybatis.spring.SqlSessionFactoryBean
 import org.mybatis.spring.annotation.MapperScan
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import javax.sql.DataSource
 
+@Configuration
 @EnableTransactionManagement
 @MapperScan(basePackages = ["com.jeonguk.web.mapper"], sqlSessionTemplateRef = "shardSqlSessionTemplate")
 class MybatisConfig {
 
     @Bean(name = ["shardSqlSessionFactory"])
-    @Throws(Exception::class)
     fun shardSqlSessionFactory(@Qualifier("shardingDataSource") dataSource: DataSource): SqlSessionFactory? {
         val bean = SqlSessionFactoryBean()
         bean.setDataSource(dataSource)
@@ -32,7 +33,6 @@ class MybatisConfig {
     }
 
     @Bean(name = ["shardSqlSessionTemplate"])
-    @Throws(Exception::class)
     fun shardSqlSessionTemplate(@Qualifier("shardSqlSessionFactory") sqlSessionFactory: SqlSessionFactory): SqlSessionTemplate {
         return SqlSessionTemplate(sqlSessionFactory)
     }
