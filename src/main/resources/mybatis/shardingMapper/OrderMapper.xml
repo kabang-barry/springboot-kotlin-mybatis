@@ -2,10 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jeonguk.web.mapper.OrderMapper">
-    <select id="selectOrderList" resultType="java.util.List">
-        SELECT * FROM t_order_0
+
+    <select id="selectByUserId" parameterType="int" resultType="order">
+        SELECT *
+        FROM t_order
+        WHERE user_id = #{userId}
     </select>
+
     <insert id="insertOrder" parameterType="order">
-        INSERT INTO t_order_0 VALUES (#{orderId}, #{userId}, #{status})
+        INSERT INTO t_order VALUES (#{userId}, #{status})
     </insert>
+
 </mapper>

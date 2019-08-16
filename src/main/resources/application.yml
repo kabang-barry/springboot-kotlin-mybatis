@@ -6,7 +6,7 @@ spring:
         jdbc-url: jdbc:mysql://localhost:3306/ds0?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: root
-        password: 71004250
+        password: jeonguk
         minimum-idle: 10
         maximum-pool-size: 200
         pool-name: DS0HikariCP
@@ -20,7 +20,7 @@ spring:
         jdbc-url: jdbc:mysql://localhost:3306/ds1?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: root
-        password: 71004250
+        password: jeonguk
         minimum-idle: 10
         maximum-pool-size: 200
         pool-name: DS1HikariCP

@@ -1,5 +1,6 @@
 package com.jeonguk.web.service
 
+import com.jeonguk.web.domain.Order
 import com.jeonguk.web.mapper.OrderMapper
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,8 +21,11 @@ class OrderServiceTest {
     lateinit var orderMapper: OrderMapper
 
     @Test
-    fun getOrderTest() {
-        val orderList = orderMapper.selectOrderList()
-        orderList.forEach { order -> log.info("order {}", order) }
+    fun getUserOrderTest() {
+        val order = Order(userId = 11111, status = "ORDERD")
+        orderMapper.insertOrder(order)
+        val orderList = orderMapper.selectByUserId(11111)
+        orderList.forEach { ord -> log.info("order {}", ord) }
     }
+
 }
