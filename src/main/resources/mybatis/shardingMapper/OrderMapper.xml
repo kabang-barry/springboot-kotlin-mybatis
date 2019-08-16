@@ -9,8 +9,11 @@
         WHERE user_id = #{user_id}
     </select>
 
-    <insert id="insertOrder" parameterType="order">
-        INSERT INTO t_order VALUES (#{userId}, #{status})
+    <insert id="insertOrder">
+        INSERT INTO t_order
+        (user_id, status)
+        VALUES
+        (#{userId}, #{status})
     </insert>
 
 </mapper>
