@@ -22,6 +22,7 @@ class MybatisConfig {
     fun shardSqlSessionFactory(@Qualifier("shardingDataSource") dataSource: DataSource): SqlSessionFactory? {
         val bean = SqlSessionFactoryBean()
         bean.setDataSource(dataSource)
+        bean.setTypeAliasesPackage("com.jeonguk.web.domain")
         bean.setMapperLocations(*PathMatchingResourcePatternResolver().getResources("classpath:mybatis/shardingMapper/*.xml"))
         bean.setConfigLocation(DefaultResourceLoader().getResource("classpath:mybatis/mybatis-config.xml"))
         return bean.getObject()

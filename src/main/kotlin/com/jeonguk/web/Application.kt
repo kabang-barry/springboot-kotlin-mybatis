@@ -13,8 +13,8 @@ import org.springframework.boot.runApplication
 		DataSourceTransactionManagerAutoConfiguration::class],
 	scanBasePackages = ["com.jeonguk.web"]
 )
-class SpringbootKotlinMybatisApplication
+class Application
 
 fun main(args: Array<String>) {
-	runApplication<SpringbootKotlinMybatisApplication>(*args)
+	runApplication<Application>(*args)
 }

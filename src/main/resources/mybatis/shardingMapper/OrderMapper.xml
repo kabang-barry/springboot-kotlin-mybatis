@@ -5,7 +5,7 @@
     <select id="selectOrderList" resultType="java.util.List">
         SELECT * FROM t_order_0
     </select>
-    <insert id="insertOrder" parameterType="orderDto">
+    <insert id="insertOrder" parameterType="order">
         INSERT INTO t_order_0 VALUES (#{orderId}, #{userId}, #{status})
     </insert>
 </mapper>
