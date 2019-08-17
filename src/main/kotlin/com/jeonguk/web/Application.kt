@@ -1,5 +1,6 @@
 package com.jeonguk.web
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -19,14 +20,17 @@ import java.util.*
 )
 class Application : CommandLineRunner {
 
+	private val log = LoggerFactory.getLogger(Application::class.java)
+
 	@Autowired
 	lateinit var applicationContext : ApplicationContext
 
+	// Bean 확인용
 	override fun run(vararg args: String?) {
 		val beanNames = applicationContext.beanDefinitionNames
 		Arrays.sort(beanNames)
 		for (beanName in beanNames) {
-			println(beanName)
+			log.info("Bean : {}", beanName)
 		}
 	}
 

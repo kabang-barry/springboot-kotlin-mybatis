@@ -1,6 +1,6 @@
 package com.jeonguk.web.service
 
-import com.jeonguk.web.domain.Order
+import com.jeonguk.web.domain.model.Order
 import com.jeonguk.web.mapper.OrderMapper
 import org.junit.Test
 import org.junit.runner.RunWith

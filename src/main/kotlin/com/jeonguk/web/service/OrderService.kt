@@ -1,7 +1,7 @@
 package com.jeonguk.web.service
 
-import com.jeonguk.web.domain.Order
-import com.jeonguk.web.dto.OrderDto
+import com.jeonguk.web.domain.dto.OrderDto
+import com.jeonguk.web.domain.model.Order
 import com.jeonguk.web.mapper.OrderMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -13,7 +13,7 @@ class OrderService {
     @Autowired
     lateinit var orderMapper: OrderMapper
 
-    fun selectByUserId(userId: Int): List<Order> {
+    fun selectByUserId(userId: Int): List<OrderDto> {
         return orderMapper.selectByUserId(userId)
     }
 

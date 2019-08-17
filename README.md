@@ -12,6 +12,35 @@
 - Sharding sphere 3.1
 
 
+##
+### Build & Run
+```
+$ mvn clean install
+```
+
+``` 
+$ java -jar target/springboot-kotlin-mybatis-0.0.1-SNAPSHOT.jar
+```
+
+##
+### TEST usnig CURL
+
+- Insert Data
+``` 
+curl -X "POST" "http://localhost:8080/api/order" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "status": "ORDERD",
+  "userId": "1"
+}'
+```
+
+- Select Data
+``` 
+curl "http://localhost:8080/api/order/{orderId}"
+```
+
+
 ```
 CREATE DATABASE IF NOT EXISTS `ds0` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `ds0`;

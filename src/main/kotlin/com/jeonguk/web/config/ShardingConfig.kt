@@ -49,7 +49,6 @@ class ShardingConfig {
     @Primary
     @Bean(name = ["shardingDataSource"])
     fun getDataSource(@Qualifier("ds0") ds0: DataSource, @Qualifier("ds1") ds1: DataSource): DataSource {
-        println("ds0 = $ds0")
         val shardingRuleConfig = ShardingRuleConfiguration()
         shardingRuleConfig.tableRuleConfigs.add(orderTableRuleConfiguration())
         shardingRuleConfig.tableRuleConfigs.add(orderItemTableRuleConfiguration())
@@ -60,7 +59,7 @@ class ShardingConfig {
         dataSourceMap["ds0"] = ds0
         dataSourceMap["ds1"] = ds1
         val properties = Properties()
-        //        properties.setProperty("sql.show", Boolean.TRUE.toString());
+        properties.setProperty("sql.show", "true") // SQL Show logging
         return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, HashMap<String, Any>(), properties)
     }
 

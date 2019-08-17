@@ -1,7 +1,6 @@
 package com.jeonguk.web.controller
 
-import com.jeonguk.web.domain.Order
-import com.jeonguk.web.dto.OrderDto
+import com.jeonguk.web.domain.dto.OrderDto
 import com.jeonguk.web.service.OrderService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,13 +17,12 @@ class OrderController {
     lateinit var orderService: OrderService
 
     @GetMapping("/{userId}")
-    fun getOrderByUserId(@PathVariable("userId") userId: Int) : List<Order> {
+    fun getOrderByUserId(@PathVariable("userId") userId: Int) : List<OrderDto> {
         return orderService.selectByUserId(userId)
     }
 
     @PostMapping
     fun insertOrder(@Valid @RequestBody orderDto: OrderDto) {
-        log.info("ORDER DTO {}", orderDto)
         orderService.insertOrder(orderDto)
     }
 

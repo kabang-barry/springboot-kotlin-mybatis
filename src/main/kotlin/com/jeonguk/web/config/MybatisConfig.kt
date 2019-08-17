@@ -15,7 +15,10 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableTransactionManagement
-@MapperScan(basePackages = ["com.jeonguk.web.mapper"], sqlSessionTemplateRef = "shardSqlSessionTemplate")
+@MapperScan(
+        basePackages = ["com.jeonguk.web.mapper"],
+        sqlSessionTemplateRef = "shardSqlSessionTemplate"
+)
 class MybatisConfig {
 
     @Bean(name = ["shardSqlSessionFactory"])

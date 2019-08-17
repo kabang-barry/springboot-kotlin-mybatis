@@ -1,4 +1,4 @@
-package com.jeonguk.web.domain
+package com.jeonguk.web.domain.model
 
 data class OrderItem(
         var orderItemId: Long? = null,
