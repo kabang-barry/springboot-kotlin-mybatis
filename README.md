@@ -2,6 +2,15 @@
 
 ---
 
+##
+### Prerequisites
+- JDK 1.8
+- Maven 3
+- Spring Boot 2.7
+- MySQL
+- Mybatis
+- Sharding sphere 3.1
+
 
 ```
 CREATE DATABASE IF NOT EXISTS `ds0` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
