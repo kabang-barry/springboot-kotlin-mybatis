@@ -41,6 +41,9 @@ curl "http://localhost:8080/api/order/{orderId}"
 ```
 
 
+##
+### DB & Table Structure
+
 ```
 CREATE DATABASE IF NOT EXISTS `ds0` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `ds0`;
