@@ -3,6 +3,7 @@ package com.jeonguk.web.config
 import com.jeonguk.web.config.db.DatabaseShardingAlgorithm
 import com.jeonguk.web.config.db.TablePreciseShardingAlgorithm
 import com.jeonguk.web.config.db.TableRangeShardingAlgorithm
+import com.zaxxer.hikari.HikariDataSource
 import io.shardingsphere.api.config.rule.ShardingRuleConfiguration
 import io.shardingsphere.api.config.rule.TableRuleConfiguration
 import io.shardingsphere.api.config.strategy.StandardShardingStrategyConfiguration
@@ -12,8 +13,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType
+import org.springframework.core.io.ClassPathResource
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator
 import java.util.*
 import javax.sql.DataSource
 
@@ -38,22 +40,48 @@ class TestShardingConfig {
 
     @Bean(name = ["ds0"])
     fun dataSource0(): DataSource {
-        val builder = EmbeddedDatabaseBuilder()
-        return builder
-                .setType(EmbeddedDatabaseType.H2) //.H2 or .DERBY
-                .setName("db0")
-                .addScript("schema-h2.sql")
-                .build()
+        val dataSource = HikariDataSource()
+        dataSource.driverClassName = "org.h2.Driver"
+        dataSource.jdbcUrl = "jdbc:h2:mem:db0;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+        dataSource.username = "sa"
+        dataSource.password = ""
+        dataSource.poolName = "DS0HikariCP"
+        dataSource.maximumPoolSize = 200
+        dataSource.minimumIdle = 10
+        dataSource.connectionTimeout = 30000
+        dataSource.connectionTestQuery = "select 1"
+        dataSource.maxLifetime = 600000
+        dataSource.idleTimeout = 120000
+
+        val initSchema = ClassPathResource("schema-h2.sql")
+        //val initData = ClassPathResource("data-h2.sql")
+        val databasePopulator = ResourceDatabasePopulator(initSchema)
+        DatabasePopulatorUtils.execute(databasePopulator, dataSource)
+
+        return dataSource
     }
 
     @Bean(name = ["ds1"])
     fun dataSource1(): DataSource {
-        val builder = EmbeddedDatabaseBuilder()
-        return builder
-                .setType(EmbeddedDatabaseType.H2) //.H2 or .DERBY
-                .setName("db1")
-                .addScript("schema-h2.sql")
-                .build()
+        val dataSource = HikariDataSource()
+        dataSource.driverClassName = "org.h2.Driver"
+        dataSource.jdbcUrl = "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+        dataSource.username = "sa"
+        dataSource.password = ""
+        dataSource.poolName = "DS1HikariCP"
+        dataSource.maximumPoolSize = 200
+        dataSource.minimumIdle = 10
+        dataSource.connectionTimeout = 30000
+        dataSource.connectionTestQuery = "select 1"
+        dataSource.maxLifetime = 600000
+        dataSource.idleTimeout = 120000
+
+        val initSchema = ClassPathResource("schema-h2.sql")
+        //val initData = ClassPathResource("data-h2.sql")
+        val databasePopulator = ResourceDatabasePopulator(initSchema)
+        DatabasePopulatorUtils.execute(databasePopulator, dataSource)
+
+        return dataSource
     }
 
     @Primary

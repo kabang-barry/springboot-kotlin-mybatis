@@ -19,11 +19,11 @@ $ mvn clean install
 ```
 
 ``` 
-$ java -jar target/springboot-kotlin-mybatis-0.0.1-SNAPSHOT.jar
+$ java -jar -Dspring.profiles.active="test" target/springboot-kotlin-mybatis-0.0.1-SNAPSHOT.jar
 ```
 
 ##
-### TEST usnig CURL
+### TEST cURL
 
 - Insert Data
 ``` 
