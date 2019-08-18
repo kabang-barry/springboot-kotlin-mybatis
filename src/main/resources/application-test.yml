@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: springboot-application
+  jackson:
+    serialization:
+      indent_output: true
+
+  h2.console:
+    enabled: true
+    path: /h2-console
+
+
+logging:
+  level:
+    org.springframework:
+      web: DEBUG
+    com.zaxxer.hikari.HikariDataSource: INFO
