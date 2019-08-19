@@ -56,18 +56,22 @@ class ShardingConfig {
     @Primary
     @Bean(name = ["shardingDataSource"])
     fun getDataSource(@Qualifier("ds0") ds0: DataSource, @Qualifier("ds1") ds1: DataSource): DataSource {
+        val dataSourceMap = HashMap<String, DataSource>()
+        dataSourceMap["ds0"] = ds0
+        dataSourceMap["ds1"] = ds1
+        val properties = Properties()
+        properties.setProperty("sql.show", "true") // SQL Show logging
+        return ShardingDataSourceFactory.createDataSource(dataSourceMap, getShardingRuleConfig(), HashMap<String, Any>(), properties)
+    }
+
+    private fun getShardingRuleConfig() : ShardingRuleConfiguration {
         val shardingRuleConfig = ShardingRuleConfiguration()
         shardingRuleConfig.tableRuleConfigs.add(orderTableRuleConfiguration())
         shardingRuleConfig.tableRuleConfigs.add(orderItemTableRuleConfiguration())
         shardingRuleConfig.bindingTableGroups.add("t_order, t_order_item")
         shardingRuleConfig.defaultDatabaseShardingStrategyConfig = StandardShardingStrategyConfiguration("user_id", DatabaseShardingAlgorithm())
         shardingRuleConfig.defaultTableShardingStrategyConfig = StandardShardingStrategyConfiguration("order_id", TablePreciseShardingAlgorithm(), TableRangeShardingAlgorithm())
-        val dataSourceMap = HashMap<String, DataSource>()
-        dataSourceMap["ds0"] = ds0
-        dataSourceMap["ds1"] = ds1
-        val properties = Properties()
-        properties.setProperty("sql.show", "true") // SQL Show logging
-        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, HashMap<String, Any>(), properties)
+        return shardingRuleConfig
     }
 
 }

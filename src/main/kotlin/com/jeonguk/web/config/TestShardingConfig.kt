@@ -8,7 +8,6 @@ import io.shardingsphere.api.config.rule.ShardingRuleConfiguration
 import io.shardingsphere.api.config.rule.TableRuleConfiguration
 import io.shardingsphere.api.config.strategy.StandardShardingStrategyConfiguration
 import io.shardingsphere.shardingjdbc.api.ShardingDataSourceFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -38,67 +37,44 @@ class TestShardingConfig {
         return result
     }
 
-    @Bean(name = ["ds0"])
-    fun dataSource0(): DataSource {
-        val dataSource = HikariDataSource()
-        dataSource.driverClassName = "org.h2.Driver"
-        dataSource.jdbcUrl = "jdbc:h2:mem:db0;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
-        dataSource.username = "sa"
-        dataSource.password = ""
-        dataSource.poolName = "DS0HikariCP"
-        dataSource.maximumPoolSize = 200
-        dataSource.minimumIdle = 10
-        dataSource.connectionTimeout = 30000
-        dataSource.connectionTestQuery = "select 1"
-        dataSource.maxLifetime = 600000
-        dataSource.idleTimeout = 120000
-
-        val initSchema = ClassPathResource("schema-h2.sql")
-        //val initData = ClassPathResource("data-h2.sql")
-        val databasePopulator = ResourceDatabasePopulator(initSchema)
-        DatabasePopulatorUtils.execute(databasePopulator, dataSource)
-
-        return dataSource
-    }
-
-    @Bean(name = ["ds1"])
-    fun dataSource1(): DataSource {
-        val dataSource = HikariDataSource()
-        dataSource.driverClassName = "org.h2.Driver"
-        dataSource.jdbcUrl = "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
-        dataSource.username = "sa"
-        dataSource.password = ""
-        dataSource.poolName = "DS1HikariCP"
-        dataSource.maximumPoolSize = 200
-        dataSource.minimumIdle = 10
-        dataSource.connectionTimeout = 30000
-        dataSource.connectionTestQuery = "select 1"
-        dataSource.maxLifetime = 600000
-        dataSource.idleTimeout = 120000
-
-        val initSchema = ClassPathResource("schema-h2.sql")
-        //val initData = ClassPathResource("data-h2.sql")
-        val databasePopulator = ResourceDatabasePopulator(initSchema)
-        DatabasePopulatorUtils.execute(databasePopulator, dataSource)
-
-        return dataSource
-    }
-
     @Primary
     @Bean(name = ["shardingDataSource"])
-    fun getDataSource(@Qualifier("ds0") ds0: DataSource, @Qualifier("ds1") ds1: DataSource): DataSource {
+    fun getDataSource(): DataSource {
+        val dataSourceMap = HashMap<String, DataSource>()
+        (0 until 2).forEach {
+            val shardName = "ds$it"
+            val dataSource = HikariDataSource()
+            dataSource.driverClassName = "org.h2.Driver"
+            dataSource.jdbcUrl = "jdbc:h2:mem:$shardName;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+            dataSource.username = "sa"
+            dataSource.password = ""
+            dataSource.poolName = shardName + "HikariCP"
+            dataSource.maximumPoolSize = 200
+            dataSource.minimumIdle = 10
+            dataSource.connectionTimeout = 30000
+            dataSource.connectionTestQuery = "select 1"
+            dataSource.maxLifetime = 600000
+            dataSource.idleTimeout = 120000
+
+            val initSchema = ClassPathResource("schema-h2.sql")
+            //val initData = ClassPathResource("data-h2.sql")
+            val databasePopulator = ResourceDatabasePopulator(initSchema)
+            DatabasePopulatorUtils.execute(databasePopulator, dataSource)
+            dataSourceMap[shardName] = dataSource
+        }
+        val properties = Properties()
+        properties.setProperty("sql.show", "true") // SQL Show logging
+        return ShardingDataSourceFactory.createDataSource(dataSourceMap, getShardingRuleConfig(), HashMap<String, Any>(), properties)
+    }
+
+    private fun getShardingRuleConfig() : ShardingRuleConfiguration {
         val shardingRuleConfig = ShardingRuleConfiguration()
         shardingRuleConfig.tableRuleConfigs.add(orderTableRuleConfiguration())
         shardingRuleConfig.tableRuleConfigs.add(orderItemTableRuleConfiguration())
         shardingRuleConfig.bindingTableGroups.add("t_order, t_order_item")
         shardingRuleConfig.defaultDatabaseShardingStrategyConfig = StandardShardingStrategyConfiguration("user_id", DatabaseShardingAlgorithm())
         shardingRuleConfig.defaultTableShardingStrategyConfig = StandardShardingStrategyConfiguration("order_id", TablePreciseShardingAlgorithm(), TableRangeShardingAlgorithm())
-        val dataSourceMap = HashMap<String, DataSource>()
-        dataSourceMap["ds0"] = ds0
-        dataSourceMap["ds1"] = ds1
-        val properties = Properties()
-        properties.setProperty("sql.show", "true") // SQL Show logging
-        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, HashMap<String, Any>(), properties)
+        return shardingRuleConfig
     }
 
 }
