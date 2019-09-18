@@ -43,18 +43,19 @@ class TestShardingConfig {
         val dataSourceMap = HashMap<String, DataSource>()
         (0 until 2).forEach {
             val shardName = "ds$it"
-            val dataSource = HikariDataSource()
-            dataSource.driverClassName = "org.h2.Driver"
-            dataSource.jdbcUrl = "jdbc:h2:mem:$shardName;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
-            dataSource.username = "sa"
-            dataSource.password = ""
-            dataSource.poolName = shardName + "HikariCP"
-            dataSource.maximumPoolSize = 200
-            dataSource.minimumIdle = 10
-            dataSource.connectionTimeout = 30000
-            dataSource.connectionTestQuery = "select 1"
-            dataSource.maxLifetime = 600000
-            dataSource.idleTimeout = 120000
+            val dataSource = HikariDataSource().apply {
+                driverClassName = "org.h2.Driver"
+                jdbcUrl = "jdbc:h2:mem:$shardName;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+                username = "sa"
+                password = ""
+                poolName = shardName + "HikariCP"
+                maximumPoolSize = 200
+                minimumIdle = 10
+                connectionTimeout = 30000
+                connectionTestQuery = "select 1"
+                maxLifetime = 600000
+                idleTimeout = 120000
+            }
 
             val initSchema = ClassPathResource("schema-h2.sql")
             //val initData = ClassPathResource("data-h2.sql")
@@ -62,6 +63,7 @@ class TestShardingConfig {
             DatabasePopulatorUtils.execute(databasePopulator, dataSource)
             dataSourceMap[shardName] = dataSource
         }
+
         val properties = Properties()
         properties.setProperty("sql.show", "true") // SQL Show logging
         return ShardingDataSourceFactory.createDataSource(

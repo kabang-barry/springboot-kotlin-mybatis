@@ -23,11 +23,12 @@ class MybatisConfig {
 
     @Bean(name = ["shardSqlSessionFactory"])
     fun shardSqlSessionFactory(@Qualifier("shardingDataSource") shardingDataSource: DataSource): SqlSessionFactory? {
-        val bean = SqlSessionFactoryBean()
-        bean.setDataSource(shardingDataSource)
-        bean.setTypeAliasesPackage("com.jeonguk.web.domain")
-        bean.setMapperLocations(*PathMatchingResourcePatternResolver().getResources("classpath:mybatis/shardingMapper/*.xml"))
-        bean.setConfigLocation(DefaultResourceLoader().getResource("classpath:mybatis/mybatis-config.xml"))
+        val bean = SqlSessionFactoryBean().apply {
+            setDataSource(shardingDataSource)
+            setTypeAliasesPackage("com.jeonguk.web.domain")
+            setMapperLocations(*PathMatchingResourcePatternResolver().getResources("classpath:mybatis/shardingMapper/*.xml"))
+            setConfigLocation(DefaultResourceLoader().getResource("classpath:mybatis/mybatis-config.xml"))
+        }
         return bean.getObject()
     }
 
